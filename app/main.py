@@ -28,4 +28,4 @@ async def get_item(item_id: str):
     return {"item_id": item_id}
 
 
-# TODO add items router in new python package "routers" and pydantic
+# TODO add items router in new python package "routers" and pydantic item model
