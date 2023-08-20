@@ -9,17 +9,20 @@ async def root():
 
 
 @app.post("/")
-async  def post():
+async def post():
     return {"message": "hello from the post route"}
+
 
 @app.put("/")
 async def put():
     return {"message": "hello from the put route"}
 
+
 @app.get("/items")
-async  def list_items():
+async def list_items():
     return {"message": "list items route"}
+
 
 @app.get("/items/{items_id}")
 async def get_item(item_id: str):
-    return{"item_id": item_id}
+    return {"item_id": item_id}
