@@ -26,3 +26,6 @@ async def list_items():
 @app.get("/items/{items_id}")
 async def get_item(item_id: str):
     return {"item_id": item_id}
+
+
+# TODO add items router in new python package "routers" and pydantic
