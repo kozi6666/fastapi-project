@@ -18,14 +18,19 @@ async def put():
     return {"message": "hello from the put route"}
 
 
-@app.get("/items")
-async def list_items():
+@app.get("/users")
+async def list_users():
     return {"message": "list items route"}
 
 
-@app.get("/items/{items_id}")
-async def get_item(item_id: str):
-    return {"item_id": item_id}
+@app.get("/users/me")
+async def get_current_user():
+    return {"Message": "this is the current user"}
+
+
+@app.get("/users/{user_id}")
+async def get_item(user_id: str):
+    return {"user_id": user_id}
 
 
 # TODO add items router in new python package "routers" and pydantic item model
