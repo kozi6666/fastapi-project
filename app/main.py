@@ -1,57 +1,66 @@
-from enum import Enum
+from typing import List
 
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
+from pydantic import BaseModel
 
-app = FastAPI()
+app = FastAPI(title="Todo API")
+
+
+class Todo(BaseModel):
+    name: str
+    due_date: str
+    description: str
+
+
+# Create, read, update, delete
+
+store_todo = []
 
 
 @app.get("/")
-async def root():
-    return {"message": "Hello World"}
+async def home():
+    return {"Hello": "World"}
 
 
-@app.post("/")
-async def post():
-    return {"message": "hello from the post route"}
+@app.post("/todo/")
+async def create_todo(todo: Todo):
+    store_todo.append(todo)
+    return todo
 
 
-@app.put("/")
-async def put():
-    return {"message": "hello from the put route"}
+@app.get("/todo/", response_model=List[Todo])
+async def get_all_todos():
+    return store_todo
 
 
-@app.get("/users")
-async def list_users():
-    return {"message": "list items route"}
+@app.get("/todo/{id}")
+async def get_todo(id: int):
+    try:
+        return store_todo[id]
+
+    except KeyError:
+        raise HTTPException(status_code=404, detail="Todo Not Found")
 
 
-@app.get("/users/me")
-async def get_current_user():
-    return {"Message": "this is the current user"}
+@app.put("/todo/{id}")
+async def update_todo(id: int, todo: Todo):
+    try:
+        store_todo[id] = todo
+        return store_todo[id]
+
+    except KeyError:
+        raise HTTPException(status_code=404, detail="Todo Not Found")
 
 
-@app.get("/users/{user_id}")
-async def get_item(user_id: str):
-    return {"user_id": user_id}
+@app.delete("/todo/{id}")
+async def delete_todo(id: int):
+    try:
+        obj = store_todo[id]
+        store_todo.pop(id)
+        return obj
+
+    except KeyError:
+        raise HTTPException(status_code=404, detail="Todo Not Found")
 
 
-class FoodEnum(str, Enum):
-    fruits = "fruits"
-    vegetables = "vegetables"
-    dairy = "dairy"
-
-
-@app.get("/foods/{food_name}")
-async def get_food(food_name: FoodEnum):
-    if food_name == FoodEnum.vegetables:
-        return {"food_name": food_name, "message": "you are healthy"}
-
-    if food_name.value == "fruits":
-        return {
-            "food_name": food_name,
-            "message": "you are still healthy, but like sweet things ",
-        }
-    return {"food_name": food_name, "message": "i like chockolate milk"}
-
-
-# TODO add items router in new python package "routers" and pydantic item model
+# # TODO add items router in new python package "routers" and pydantic item model
